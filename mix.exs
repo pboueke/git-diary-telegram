@@ -18,7 +18,9 @@ defmodule App.Mixfile do
   end
 
   defp deps do
-    [{:nadia, "~> 0.4.1"}]
+    [{:nadia, "~> 0.4.1"},
+     {:httpoison, "~>0.9"},
+     {:poison, "~> 3.1"}]
   end
 
   defp aliases do

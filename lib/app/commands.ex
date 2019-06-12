@@ -4,6 +4,25 @@ defmodule App.Commands do
 
   alias App.Commands.Outside
 
+  command ["posts"] do
+
+    case HTTPoison.get("http://localhost:3000/posts", [{:"Authorization", "Token 2f984e247c1f5"}]) do
+      {:ok, %{status_code: 200, body: body}} ->
+        send_message Poison.decode!(body)
+
+      {:ok, %{status_code: 401}} ->
+        send_message "401: Unauthorized to fetch posts"
+
+      {:ok, %{status_code: 404}} ->
+        send_message "404: could not locate /posts"
+
+      {:error, %{reason: reason}} ->
+        send_message "Unknown error"
+end
+
+  end
+
+
   # You can create commands in the format `/command` by
   # using the macro `command "command"`.
   command ["hello", "hi"] do
