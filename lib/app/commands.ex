@@ -1,8 +1,29 @@
 defmodule App.Commands do
   use App.Router
   use App.Commander
+  import App.Utils
 
   alias App.Commands.Outside
+
+  command ["register"] do
+
+    [_command | args] = String.split(update.message.text, " ")
+    [url | rest] = args
+    token = List.first(rest)
+
+    record = %{
+      "user" => update.message.from.id,
+      "token" => token,
+      "url" => url
+    } 
+
+    set_user_data(record)
+
+   IO.inspect record 
+
+   send_message "Ok"
+
+  end
 
   command ["posts"] do
 
