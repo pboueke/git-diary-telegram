@@ -1,9 +1,9 @@
 use Mix.Config
 
 config :app,
-  bot_name: ""
+  bot_name: "git-diary"
 
 config :nadia,
-  token: ""
+  token: System.get_env("BOT_TOKEN")
 
 import_config "#{Mix.env}.exs"
