@@ -3,40 +3,12 @@ defmodule App.Commands do
   use App.Commander
   import App.Utils
 
-  alias App.Commands.Outside
+  alias App.Commands.Register
+  alias App.Commands.Posts
 
-  command ["register"] do
+  command ["register"], Register, :register
 
-    [_command | args] = String.split(update.message.text, " ")
-    [url | rest] = args
-    token = List.first(rest)
-
-    send_message set_user_data(%{
-      "user" => update.message.from.id,
-      "token" => token,
-      "url" => url
-    } )
-
-  end
-
-  command ["posts"] do
-
-    case HTTPoison.get("http://localhost:3000/posts", [{:"Authorization", "Token 2f984e247c1f5"}]) do
-      {:ok, %{status_code: 200, body: body}} ->
-        send_message Poison.decode!(body)
-
-      {:ok, %{status_code: 401}} ->
-        send_message "401: Unauthorized to fetch posts"
-
-      {:ok, %{status_code: 404}} ->
-        send_message "404: could not locate /posts"
-
-      {:error, %{reason: reason}} ->
-        send_message "Unknown error"
-end
-
-  end
-
+  command ["posts"], Posts, :posts
 
   # You can create commands in the format `/command` by
   # using the macro `command "command"`.
@@ -54,11 +26,6 @@ end
     # See also: https://hexdocs.pm/nadia/Nadia.html
     send_message "Hello World!"
   end
-
-  # You may split code to other modules using the syntax
-  # "Module, :function" instead of "do..end"
-  command "outside", Outside, :outside
-  # For the sake of this tutorial, I'll define everything here
 
   command "question" do
     Logger.log :info, "Command /question"

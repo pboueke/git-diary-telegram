@@ -1,4 +1,5 @@
 defmodule App.Utils do
+    @filename "data.json"
     
     def get_json(filename) do
         with {:ok, body} <- File.read(filename),
@@ -10,10 +11,15 @@ defmodule App.Utils do
     end
 
     def set_user_data(data) do
-        db = get_json("data.json")
+        db = get_json(@filename)
         ndb = Map.put(elem(db,1), data["user"], data)
-        set_json("data.json", ndb)
+        set_json(@filename, ndb)
         "Ok, cofigurations overwritten"
+    end
+
+    def get_user_data(id) do
+        db = get_json(@filename)
+        [elem(db,1)[to_string(id)]["url"], elem(db,1)[to_string(id)]["token"]]
     end
 
 end
