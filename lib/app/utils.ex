@@ -6,14 +6,14 @@ defmodule App.Utils do
     end
 
     def set_json(filename, data) do
-        File.write(filename, data, [:binary])
+        File.write(filename,  Poison.encode!(data), [:binary])
     end
 
     def set_user_data(data) do
         db = get_json("data.json")
-        IO.inspect db
-        ndb = %{ db | data["user"] => data }
+        ndb = Map.put(elem(db,1), data["user"], data)
         set_json("data.json", ndb)
+        "Ok, cofigurations overwritten"
     end
 
 end

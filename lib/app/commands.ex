@@ -11,17 +11,11 @@ defmodule App.Commands do
     [url | rest] = args
     token = List.first(rest)
 
-    record = %{
+    send_message set_user_data(%{
       "user" => update.message.from.id,
       "token" => token,
       "url" => url
-    } 
-
-    set_user_data(record)
-
-   IO.inspect record 
-
-   send_message "Ok"
+    } )
 
   end
 
