@@ -11,9 +11,9 @@ defmodule App.Commands do
   command ["posts"], Posts, :posts
 
   callback_query_command "get" do
-    [url, token] = get_user_data(update.message.from.id)
+    [url, token] = get_user_data(update.callback_query.from.id)
     [_command, name] = String.split(update.callback_query.data, " ")
-    case HTTPoison.get(url <> "/posts/" <> name, [{:"Authorization", "Token " <> token}]) do
+    case HTTPoison.get(url <> "/post/" <> name, [{:"Authorization", "Token " <> token}]) do
       {:ok, %{status_code: 200, body: body}} ->
         send_message body
 
