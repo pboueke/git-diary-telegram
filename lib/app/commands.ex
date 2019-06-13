@@ -10,22 +10,24 @@ defmodule App.Commands do
 
   command ["posts"], Posts, :posts
 
-  # You can create commands in the format `/command` by
-  # using the macro `command "command"`.
-  command ["hello", "hi"] do
-    # Logger module injected from App.Commander
-    Logger.log :info, "Command /hello or /hi"
+  callback_query_command "get" do
+    [url, token] = get_user_data(update.message.from.id)
+    [_command, name] = String.split(update.callback_query.data, " ")
+    case HTTPoison.get(url <> "/posts/" <> name, [{:"Authorization", "Token " <> token}]) do
+      {:ok, %{status_code: 200, body: body}} ->
+        send_message body
 
-    # You can use almost any function from the Nadia core without
-    # having to specify the current chat ID as you can see below.
-    # For example, `Nadia.send_message/3` takes as first argument
-    # the ID of the chat you want to send this message. Using the
-    # macro `send_message/2` defined at App.Commander, it is
-    # injected the proper ID at the function. Go take a look.
-    #
-    # See also: https://hexdocs.pm/nadia/Nadia.html
-    send_message "Hello World!"
+      {:ok, %{status_code: 401}} ->
+        send_message "401: Unauthorized to fetch a post"
+
+      {:ok, %{status_code: 404}} ->
+        send_message "404: could not locate /posts/" <> name
+
+      {:error, %{reason: reason}} ->
+        send_message "Unknown error"
+    end
   end
+
 
   command "question" do
     Logger.log :info, "Command /question"
