@@ -12,7 +12,12 @@ defmodule App.Utils do
 
     def set_user_data(data) do
         db = get_json(@filename)
-        ndb = Map.put(elem(db,1), data["user"], data)
+        ndb =
+            try do
+                %{db | to_string(data["user"]) => data}
+            rescue
+                _ -> Map.put(elem(db,1), to_string(data["user"]), data)
+            end
         set_json(@filename, ndb)
         "Ok, cofigurations overwritten"
     end
