@@ -4,16 +4,20 @@ defmodule App.Commands.Posts do
   
     def posts(update) do
       [url, token] = get_user_data(update.message.from.id)
+      [_command | params] = String.split(update.message.text, " ")
+      date = List.first(params)
       case HTTPoison.get(url <> "/posts", [{:"Authorization", "Token " <> token}]) do
         {:ok, %{status_code: 200, body: body}} ->
-          send_message "What's the best JoJo?",
+          records = elem(Poison.decode(body),1)
+          filtered = if date == nil, do: records, else: Enum.filter(records, fn x -> String.starts_with?(x, date) end)
+          send_message "Which one?",
             reply_markup: %Model.InlineKeyboardMarkup{
-              inline_keyboard: [Enum.map(elem(Poison.decode(body),1), fn it -> 
-                %{
+              inline_keyboard: Enum.map(filtered, fn it -> 
+                [%{
                   callback_data: "/get " <> it,
-                  text: it,
-                }
-              end)]
+                  text: String.replace(String.slice(it,11..-1), "-", " ")
+                }]
+              end)
             }
   
         {:ok, %{status_code: 401}} ->

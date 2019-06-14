@@ -6,16 +6,15 @@ defmodule App.Commands.New do
         [_command | words] = String.split(update.message.text, " ")
         [title | phrases] = String.split(Enum.join(words, " "),"\n")
         body = Enum.join(phrases,"\n")
-
-        IO.puts Poison.encode!(%{"title" => title, "body" => body})
                           
         [url, token] = get_user_data(update.message.from.id)
         case HTTPoison.put(url <> "/post/new", 
                           Poison.encode!(%{"title" => title, "body" => body}),
                           [{:"Authorization", "Token " <> token},
-                          {:"Content-Type", "application/json"}]) do
+                          {:"Content-Type", "application/json"}],
+                          [{:recv_timeout, 50000}]) do
           {:ok, %{status_code: 200, body: body}} ->
-            send_message body
+            send_message List.first(Poison.decode!(body))
     
           {:ok, %{status_code: 401}} ->
             send_message "401: Unauthorized to fetch posts"
@@ -24,11 +23,9 @@ defmodule App.Commands.New do
             send_message "404: could not locate /posts"
     
           {:error, %{reason: reason}} ->
+            IO.inspect reason
             send_message "Unknown error"
         end
-
-        send_message Enum.join([title, body], "\n"), [{:parse_mode, "Markdown" }]
-
     end
   end
   
