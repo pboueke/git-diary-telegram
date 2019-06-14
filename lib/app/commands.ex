@@ -7,6 +7,7 @@ defmodule App.Commands do
   alias App.Commands.Posts
   alias App.Commands.New
   alias App.Commands.Get
+  alias App.Commands.Help
 
   command ["register"], Register, :register
 
@@ -16,12 +17,8 @@ defmodule App.Commands do
 
   command ["new"], New, :new
 
-
+  command ["help", "hi", "hello", "Help", "Hi", "Hello"], Help, :help
  
-
-  # Fallbacks
-
-  # Rescues any unmatched callback query.
   callback_query do
     Logger.log :warn, "Did not match any callback query"
 
