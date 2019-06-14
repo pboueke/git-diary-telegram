@@ -14,11 +14,11 @@ defmodule App.Commands do
 
   command ["register"], Register, :register
 
-  command ["posts"], Posts, :posts
+  command ["posts", "ls", "list"], Posts, :posts
 
   callback_query_command "get", Get, :get
 
-  command "delete", Delete, :delete
+  command ["delete", "del"], Delete, :delete
 
   callback_query_command "delete_confirm", DeleteConfirm, :deleteConfirm
 
