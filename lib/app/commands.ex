@@ -7,6 +7,9 @@ defmodule App.Commands do
   alias App.Commands.Posts
   alias App.Commands.New
   alias App.Commands.Get
+  alias App.Commands.Delete
+  alias App.Commands.DeleteConfirm
+  alias App.Commands.DeletePost
   alias App.Commands.Help
 
   command ["register"], Register, :register
@@ -15,9 +18,17 @@ defmodule App.Commands do
 
   callback_query_command "get", Get, :get
 
+  command "delete", Delete, :delete
+
+  callback_query_command "delete_confirm", DeleteConfirm, :deleteConfirm
+
+  callback_query_command "delete_post", DeletePost, :deletePost
+
   command ["new"], New, :new
 
   command ["help", "hi", "hello", "Help", "Hi", "Hello"], Help, :help
+
+  callback_query "nil" do end
  
   callback_query do
     Logger.log :warn, "Did not match any callback query"

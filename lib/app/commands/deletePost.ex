@@ -1,21 +1,14 @@
 
-defmodule App.Commands.Get do
+defmodule App.Commands.DeletePost do
     use App.Commander
     import App.Utils
   
-    def get(update) do
+    def deletePost(update) do
         [url, token] = get_user_data(update.callback_query.from.id)
         [_command, name] = String.split(update.callback_query.data, " ")
-        case HTTPoison.get(url <> "/post/" <> name, [{:"Authorization", "Token " <> token}]) do
+        case HTTPoison.delete(url <> "/post/" <> name, [{:"Authorization", "Token " <> token}]) do
           {:ok, %{status_code: 200, body: body}} ->
-            send_message body, 
-            [{:reply_markup, %Model.InlineKeyboardMarkup{
-              inline_keyboard: [
-                [%{
-                  callback_data: "/delete_confirm " <> name,
-                  text: "Delete"
-                }]]
-            }}, {:parse_mode, "Markdown" }]
+            send_message body <> " deleted", [{:parse_mode, "Markdown" }]
     
           {:ok, %{status_code: 401}} ->
             send_message "401: Unauthorized to fetch a post"
