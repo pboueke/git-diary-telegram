@@ -14,6 +14,10 @@ defmodule App.Commands.Get do
                 [%{
                   callback_data: "/delete_confirm " <> name,
                   text: "Delete"
+                },
+                %{
+                  callback_data: "/edit " <> name,
+                  text: "Edit"
                 }]]
             }}, {:parse_mode, "Markdown" }]
     

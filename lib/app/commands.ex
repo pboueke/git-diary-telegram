@@ -7,6 +7,7 @@ defmodule App.Commands do
   alias App.Commands.Posts
   alias App.Commands.New
   alias App.Commands.Get
+  alias App.Commands.Edit
   alias App.Commands.Delete
   alias App.Commands.DeleteConfirm
   alias App.Commands.DeletePost
@@ -17,6 +18,8 @@ defmodule App.Commands do
   command ["posts", "ls", "list"], Posts, :posts
 
   callback_query_command "get", Get, :get
+
+  callback_query_command "edit", Edit, :edit
 
   command ["delete", "del"], Delete, :delete
 
