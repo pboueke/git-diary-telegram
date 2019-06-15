@@ -27,4 +27,8 @@ defmodule App.Utils do
         [elem(db,1)[to_string(id)]["url"], elem(db,1)[to_string(id)]["token"]]
     end
 
+    def get_post_uri(name) do
+        String.replace(name, ",", "_comma_")
+    end
+
 end

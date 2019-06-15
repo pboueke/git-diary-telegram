@@ -6,7 +6,7 @@ defmodule App.Commands.DeletePost do
     def deletePost(update) do
         [url, token] = get_user_data(update.callback_query.from.id)
         [_command, name] = String.split(update.callback_query.data, " ")
-        case HTTPoison.delete(url <> "/post/" <> name, [{:"Authorization", "Token " <> token}]) do
+        case HTTPoison.delete(url <> "/post/" <> get_post_uri(name), [{:"Authorization", "Token " <> token}]) do
           {:ok, %{status_code: 200, body: body}} ->
             send_message body <> " deleted", [{:parse_mode, "Markdown" }]
     

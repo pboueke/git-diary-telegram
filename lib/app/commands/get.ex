@@ -6,7 +6,7 @@ defmodule App.Commands.Get do
     def get(update) do
         [url, token] = get_user_data(update.callback_query.from.id)
         [_command, name] = String.split(update.callback_query.data, " ")
-        case HTTPoison.get(url <> "/post/" <> name, [{:"Authorization", "Token " <> token}]) do
+        case HTTPoison.get(url <> "/post/" <> get_post_uri(name), [{:"Authorization", "Token " <> token}]) do
           {:ok, %{status_code: 200, body: body}} ->
             send_message body, 
             [{:reply_markup, %Model.InlineKeyboardMarkup{
